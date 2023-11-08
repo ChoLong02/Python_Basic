@@ -7,6 +7,7 @@ def get_news(url: str):
     result = requests.get(url)
     doc = BeautifulSoup(result.text, "html.parser")
     reg_date = doc.select("span.num_date")[0].get_text()
+    print(f"날짜: {reg_date}")
 
     title = doc.select("h3.tit_view")[0].get_text()
     print(f"제목: {title}")
