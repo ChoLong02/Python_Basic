@@ -1,3 +1,10 @@
+# TODO: 1분전 -> 날짜 계산해서 저장(?시간전 완료)
+#       "조금전"
+
+# 다음 영화 DATE → 조금전, ?분전, ?시간전, 2023.11.24 11:09
+# TODO: 스케줄러 등록 하루에 1번 수집(낮12시)
+#       → 중복 방지를 위해서(DB에 저장된 리뷰의 마지막 날짜보다 큰 애들만 수집)
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -9,6 +16,8 @@ import time
 import re
 import math
 from bs4 import BeautifulSoup
+
+from db.movie_dao import add_review
 # pip install webdriver_manager
 # pip install selenium
 
@@ -97,3 +106,13 @@ for item in review_list:
         review_date = review_date.strftime("%Y. %m. %d. %H:%M")
     print(f"  - 날짜: {review_date}")
 
+    # MariaDB에 저장
+    #  1) DB에 보낼 데이터 만들기
+    data = {
+        "title": movie_title,
+        "review": review_content,
+        "score": review_score,
+        "writer": review_writer,
+        "reg_date": review_date
+    }
+    add_review(data)
