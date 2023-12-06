@@ -13,7 +13,7 @@ import re
 import math
 from bs4 import BeautifulSoup
 
-from db.movie_dao import add_review
+from db.movie_dao import add_review, get_last_review
 # pip install webdriver_manager
 # pip install selenium
 
@@ -27,7 +27,14 @@ from db.movie_dao import add_review
 #   - 전용 브라우저 Open → 작업 → 브라우저 Close(Default)
 
 
-def review_collector(movie_code, last_date):
+def review_collector(movie_code):
+    # DB에서 데이터 조회 실패 → None
+    last_date = get_last_review()
+    if last_date == None:
+        last_date = 0
+    else:
+        last_date = int(last_date["int_regdate"])
+
     # ** Selenium 사용방법 2가지
     #  1.직접 다운로드(크롬 브라우저)해서 사용
     #    url: https://sites.google.com/chromium.org/driver/
